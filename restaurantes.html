@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurantes — RateAt</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <img src="IMG/LOGO RATEEAT.png" alt="Logo RateAt">
+    <span>RateAt</span>
+  </a>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="restaurantes.html" class="ativo">Restaurantes</a>
+    <a href="avaliar.html">Avaliar</a>
+    <a href="cadastro.html">Cadastro</a>
+    <a href="login.html">Entrar</a>
+  </nav>
+</header>
+
+<main>
+  <h1> Restaurantes</h1>
+
+  <!-- Barra de pesquisa -->
+  <form class="barra-pesquisa" id="form-busca">
+    <input id="busca" name="busca" type="text" placeholder="Pesquisar restaurante, categoria…">
+    <button type="submit" class="btn btn-primario">Buscar</button>
+  </form>
+
+  <!-- Grade de cards -->
+  <div class="grade-cards" id="lista-restaurantes"></div>
+
+  <!-- Botão de admin (fase futura) -->
+  <div style="margin-top:32px;">
+    <a href="restaurante/listarrestaurante.php" class="btn btn-contorno"> Administrar restaurantes</a>
+  </div>
+
+</main>
+
+<script>
+  const busca = new URLSearchParams(window.location.search).get('busca') || '';
+  const campoBusca = document.getElementById('busca');
+  const lista = document.getElementById('lista-restaurantes');
+  campoBusca.value = busca;
+
+  function estrelas(nota) {
+    return nota ? '★'.repeat(Math.round(Number(nota))) + '☆'.repeat(5 - Math.round(Number(nota))) : '☆☆☆☆☆';
+  }
+
+  function carregarRestaurantes() {
+    const termo = campoBusca.value.trim();
+    fetch('restaurante/dadosrestaurante.php?busca=' + encodeURIComponent(termo))
+      .then(resposta => resposta.json())
+      .then(restaurantes => {
+        lista.innerHTML = restaurantes.length ? restaurantes.map(restaurante => `
+          <div class="card">
+            <h3>${restaurante.nome}</h3>
+            <div class="estrelas">${estrelas(restaurante.nota_media)}</div>
+            <p class="info">${restaurante.categoria} &nbsp;•&nbsp; ${restaurante.preco}</p>
+            <p class="info">Nota: <strong>${restaurante.nota_media ?? 'Sem avaliações'}</strong></p>
+            <a href="avaliar.html?restaurante=${encodeURIComponent(restaurante.nome)}" class="btn btn-primario">Avaliar restaurante</a>
+          </div>`).join('') : '<p>Nenhum restaurante encontrado.</p>';
+      });
+  }
+
+  document.getElementById('form-busca').addEventListener('submit', evento => {
+    evento.preventDefault();
+    history.replaceState(null, '', '?busca=' + encodeURIComponent(campoBusca.value.trim()));
+    carregarRestaurantes();
+  });
+
+  carregarRestaurantes();
+</script>
+
+<footer>
+   2026 RateAt
+</footer>
+
+</body>
+</html>

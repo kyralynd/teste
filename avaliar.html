@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avaliar Restaurante — RateAt</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <img src="IMG/LOGO RATEEAT.png" alt="Logo RateAt">
+    <span>Rateat</span>
+  </a>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="restaurantes.html">Restaurantes</a>
+    <a href="avaliar.html" class="ativo">Avaliar</a>
+    <a href="cadastro.html">Cadastro</a>
+    <a href="login.html">Entrar</a>
+  </nav>
+</header>
+
+<main>
+  <h1> Avaliar Restaurante</h1>
+
+  <div class="caixa-form">
+    <form action="avaliar/salvaravaliacao.php" method="post">
+
+      <!-- Restaurante -->
+      <div class="form-grupo">
+        <label for="nome_restaurante">Restaurante</label>
+        <select id="nome_restaurante" name="nome_restaurante" required>
+          <option value="">Selecione um restaurante </option>
+        </select>
+      </div>
+
+      <!-- Nota -->
+      <div class="form-grupo">
+        <label for="nota">Nota (1 a 5 estrelas)</label>
+        <select id="nota" name="nota" required>
+          <option value="">Escolha sua nota </option>
+          <option value="5">⭐⭐⭐⭐⭐ — Excelente (5)</option>
+          <option value="4">⭐⭐⭐⭐ — Muito bom (4)</option>
+          <option value="3">⭐⭐⭐ — Bom (3)</option>
+          <option value="2">⭐⭐ — Regular (2)</option>
+          <option value="1">⭐ — Ruim (1)</option>
+        </select>
+      </div>
+
+      <!-- Comentário -->
+      <div class="form-grupo">
+        <label for="comentario">Comentário</label>
+        <textarea id="comentario" name="comentario" placeholder="Conte sua experiência…" required></textarea>
+      </div>
+
+      <!-- Botões -->
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <button type="submit" class="btn btn-primario">Enviar avaliação</button>
+        <button type="reset" class="btn btn-contorno">Limpar</button>
+      </div>
+
+    </form>
+  </div>
+
+  <div style="margin-top:24px;">
+    <a href="avaliar/listaravaliacao.php" class="btn btn-contorno">Ver todas as avaliações</a>
+  </div>
+</main>
+<footer>
+  2026 RateAt
+</footer>
+
+</body>
+</html>

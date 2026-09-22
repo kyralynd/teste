@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RateAt — Encontre e Avalie Restaurantes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── Cabeçalho ── -->
+<header>
+  <a href="index.html" class="logo">
+    <img src="IMG/LOGO RATEEAT.png" alt="Logo RateAt">
+    <span>RateAt</span>
+  </a>
+  <nav>
+    <a href="index.html" class="ativo">Início</a>
+    <a href="restaurantes.html">Restaurantes</a>
+    <a href="avaliar.html">Avaliar</a>
+    <a href="cadastro.html">Cadastro</a>
+    <a href="login.html">Entrar</a>
+  </nav>
+</header>
+
+<!-- ── Conteúdo principal ── -->
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1> Descubra onde comer</h1>
+    <p>Encontre os melhores restaurantes e compartilhe sua experiência.</p>
+    <form action="restaurantes.html" method="get">
+      <div class="barra-pesquisa" style="max-width:500px; margin:0 auto;">
+        <input type="text" name="busca" placeholder="Pesquisar restaurante…">
+        <button type="submit" class="btn btn-primario">Buscar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Mais bem avaliados -->
+  <section>
+    <h2> Mais bem avaliados</h2>
+    <div class="grade-cards" id="mais-avaliados"></div>
+  </section>
+
+  
+
+</main>
+
+<script>
+  fetch('restaurante/dadosrestaurante.php')
+    .then(resposta => resposta.json())
+    .then(restaurantes => {
+      const nota = restaurante => restaurante.nota_media ? Number(restaurante.nota_media).toLocaleString('pt-BR', { minimumFractionDigits: 1 }) : '—';
+      const estrelas = restaurante => restaurante.nota_media ? '★'.repeat(Math.round(Number(restaurante.nota_media))) + '☆'.repeat(5 - Math.round(Number(restaurante.nota_media))) : '☆☆☆☆☆';
+      const cards = document.getElementById('mais-avaliados');
+      const ranking = document.getElementById('ranking');
+
+      cards.innerHTML = restaurantes.slice(0, 3).map(restaurante => `
+        <div class="card">
+          <h3>${restaurante.nome}</h3>
+          <div class="estrelas">${estrelas(restaurante)}</div>
+          <p class="info">${restaurante.categoria} &nbsp;•&nbsp; ${restaurante.preco}</p>
+          <p class="info">Nota: <strong>${nota(restaurante)}</strong></p>
+          <a href="avaliar.html?restaurante=${encodeURIComponent(restaurante.nome)}" class="btn btn-primario">Avaliar restaurante</a>
+        </div>`).join('');
+
+      ranking.innerHTML = restaurantes.slice(0, 5).map((restaurante, indice) => `
+        <div class="ranking-item">
+          <span class="ranking-pos">${indice + 1}º</span>
+          <span class="ranking-nome">${restaurante.nome}</span>
+          <span class="ranking-nota">★ ${nota(restaurante)}</span>
+        </div>`).join('');
+    });
+</script>
+
+<footer>
+   2026 RateAt 
+</footer>
+
+</body>
+</html>

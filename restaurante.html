@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurante — RateAt</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <img src="IMG/LOGO RATEEAT.png" alt="Logo RateAt">
+    <span>RateAt</span>
+  </a>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="restaurantes.html" class="ativo">Restaurantes</a>
+    <a href="avaliar.html">Avaliar</a>
+    <a href="cadastro.html">Cadastro</a>
+    <a href="login.html">Entrar</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- Detalhes do restaurante -->
+  <section>
+    <h1 id="nome-restaurante">Carregando restaurante...</h1>
+
+    <div class="card" style="margin-bottom:24px;">
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <div>
+          <div class="estrelas" id="estrelas-restaurante" style="font-size:1.5rem;"></div>
+          <p id="nota-restaurante" style="font-weight:700; font-size:1.3rem; color:var(--primaria);"></p>
+          <p id="total-avaliacoes" style="font-size:0.85rem; color:var(--contorno);"></p>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <p class="info"><strong>Categoria:</strong> <span id="categoria-restaurante"></span></p>
+          <p class="info"><strong>Faixa de preço:</strong> <span id="preco-restaurante"></span></p>
+          <p class="info"><strong>Endereço:</strong> <span id="endereco-restaurante"></span></p>
+          <p class="info"><strong>CEP:</strong> <span id="cep-restaurante"></span></p>
+        </div>
+      </div>
+      <p id="descricao-restaurante" style="margin-top:14px; color:var(--sobre-superficie-variante);"></p>
+      <div style="margin-top:16px;">
+        <a id="link-avaliar" href="avaliar.html" class="btn btn-primario">✏️ Avaliar este restaurante</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Avaliações -->
+  <section>
+    <h2>💬 Avaliações dos clientes</h2>
+
+    <div id="lista-avaliacoes"></div>
+  </section>
+
+  <div style="margin-top:24px;">
+    <a href="restaurantes.html" class="btn btn-contorno">← Voltar para restaurantes</a>
+  </div>
+
+</main>
+
+<script>
+  const nome = new URLSearchParams(window.location.search).get('nome');
+  const estrelas = nota => nota ? '★'.repeat(Math.round(Number(nota))) + '☆'.repeat(5 - Math.round(Number(nota))) : '☆☆☆☆☆';
+
+  if (!nome) {
+    document.getElementById('nome-restaurante').textContent = 'Restaurante não informado';
+  } else {
+    fetch('restaurante/dadosdetalhes.php?nome=' + encodeURIComponent(nome))
+      .then(resposta => {
+        if (!resposta.ok) throw new Error('Restaurante não encontrado');
+        return resposta.json();
+      })
+      .then(restaurante => {
+        document.title = restaurante.nome + ' — RateAt';
+        document.getElementById('nome-restaurante').textContent = restaurante.nome;
+        document.getElementById('estrelas-restaurante').textContent = estrelas(restaurante.nota_media);
+        document.getElementById('nota-restaurante').textContent = restaurante.nota_media || 'Sem avaliações';
+        document.getElementById('total-avaliacoes').textContent = restaurante.total_aval + ' avaliação(ões)';
+        document.getElementById('categoria-restaurante').textContent = restaurante.categoria;
+        document.getElementById('preco-restaurante').textContent = restaurante.preco;
+        document.getElementById('endereco-restaurante').textContent = restaurante.rua + ' — ' + restaurante.bairro;
+        document.getElementById('cep-restaurante').textContent = restaurante.cep;
+        document.getElementById('descricao-restaurante').textContent = restaurante.descricao || '';
+        document.getElementById('link-avaliar').href = 'avaliar.html?restaurante=' + encodeURIComponent(restaurante.nome);
+
+        const lista = document.getElementById('lista-avaliacoes');
+        lista.innerHTML = restaurante.avaliacoes.length ? restaurante.avaliacoes.map(avaliacao => `
+          <div class="avaliacao-item">
+            <div class="cabecalho">
+              <span class="usuario">${avaliacao.nome_usuario}</span>
+              <span class="data">${new Date(avaliacao.data).toLocaleDateString('pt-BR')}</span>
+            </div>
+            <div class="estrelas">${estrelas(avaliacao.nota)}</div>
+            <p class="comentario">${avaliacao.comentario}</p>
+          </div>`).join('') : '<p>Nenhuma avaliação cadastrada para este restaurante.</p>';
+      })
+      .catch(() => {
+        document.getElementById('nome-restaurante').textContent = 'Restaurante não encontrado';
+        document.getElementById('lista-avaliacoes').innerHTML = '<p>Não foi possível carregar este restaurante.</p>';
+      });
+  }
+</script>
+
+<footer>
+  &copy; 2025 RateAt — Todos os direitos reservados
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — RateAt</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <img src="IMG/LOGO RATEEAT.png" alt="Logo RateAt">
+    <span>RateAt</span>
+  </a>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="restaurantes.html">Restaurantes</a>
+    <a href="avaliar.html">Avaliar</a>
+    <a href="cadastro.html">Cadastro</a>
+    <a href="login.html" class="ativo">Entrar</a>
+  </nav>
+</header>
+
+<main style="display:flex; justify-content:center;">
+  <div style="width:100%; max-width:420px;">
+    <h1 style="text-align:center; margin-bottom:24px;">Entrar</h1>
+
+    <div class="caixa-form">
+      <form action="usuario/entrar.php" method="post">
+
+        <div class="form-grupo">
+          <label for="login">Usuário ou e-mail</label>
+          <input type="text" id="login" name="login" placeholder="Digite seu usuário" required>
+        </div>
+
+        <div class="form-grupo">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+          <button type="submit" class="btn btn-primario">Entrar</button>
+          <a href="cadastro.html" class="btn btn-contorno" style="text-align:center;">Criar conta</a>
+          
+        </div>
+
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer>
+   2026 RateAt
+</footer>
+
+</body>
+</html>
